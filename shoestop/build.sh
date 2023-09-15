@@ -2,5 +2,5 @@
 
 # Create image using dockerfile
 
-docker build -t hackathon:"$BUILDNUMBER" .
+docker build -t hackathon .
 

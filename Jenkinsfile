@@ -7,20 +7,20 @@ pipeline {
         AWS_SECRET_ACCESS_KEY  =  credentials ('secretkey')
         DOCKERHUBUSER = credentials ('dockerhubuser')
         DOCKERHUBPSW =  credentials ('dockerhubpsw')
+        SERVERKEY = credentials ('server')
     }
 
     stages {
-        stage('Hello') {
+        stage('git_checkout') {
             steps {
-                echo "hello"
-                git branch: 'main', url: 'https://github.com/MUTHUMMK/CAPSTONE-node.js.git'
+                git branch: 'master', url: 'https://github.com/MUTHUMMK/demo_tf.git'
             }
         }
         stage('build') {
             steps {
                 script {
                     sh """
-                    cd build
+                    cd shoestop
                     sh build.sh
                     """
                 }
@@ -39,52 +39,32 @@ pipeline {
         stage('create') {
             steps {
                 script {
-                    withCredentials([sshUserPrivateKey(credentialsId: 'SSHID', keyFileVariable: 'SSH_KEY', usernameVariable: 'ubuntu')]) {
                     sh """
-                    cd create
-                    sh create.sh
+                    cd create_infra
+                    sh config_infra.sh
                     """
-}
-
-                    
                 }
             }
         }
-        stage('deploy') {
+        
+        stage('deployment') {
             steps {
                 script {
-                    withCredentials([sshUserPrivateKey(credentialsId: 'SSHID', keyFileVariable: 'SSH_KEY', usernameVariable: 'ubuntu')]) {
                     sh """
-                    cd deploy
-                    sh deploy.sh
+                    cd ansible
+                    sh ansible.sh
+                    ansible-playbook -i inventory.txt --private-key=$SERVERKEY playbook.yml
                     """
-}
-
-                    
+                    /*sh """ 
+                    cd ansible
+                    sh ansible.sh
+                    ansiblePlaybook credentialsId: 'server_key', disableHostKeyChecking: true, installation: 'ansible2', inventory: 'ansible/inventory.txt', playbook: 'ansible/playbook.yml'
+                    """
+                    */
                 }
             }
         }
-        stage('monitor') {
-            steps {
-                script {
-                    withCredentials([sshUserPrivateKey(credentialsId: 'SSHID', keyFileVariable: 'SSH_KEY', usernameVariable: 'ubuntu')]) {
-                    sh """
-                    cd monitor
-                    sh monitor.sh
-                    """
-}
-
-                    
-                }
-            }
-        }
-
-}
-        post {
-        success {
-            mail bcc: '', body: 'All the stages in the pipeline has been completed, check in the jenkins master for the logs', cc: '', from: '', replyTo: '', subject: 'react app pipeline completed', to: 'mmkak7899@gmail.com'
-        }
-
+        
 
     }
 }

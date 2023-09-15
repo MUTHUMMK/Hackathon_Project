@@ -17,19 +17,19 @@ sed "s/instance_id/$b/g" variable.tf
 
 echo "$c"
 
-sed "s/vpc_id/$c/g" variable.tf
+sed -i "s/vpc_id/$c/g" variable.tf
 
 echo "$d"
 
-sed "s/subnet_1/$d/g" variable.tf
+sed -i "s/subnet_1/$d/g" variable.tf
 
 echo "$e"
 
-sed "s/subnet_2/$e/g" variable.tf
+sed -i "s/subnet_2/$e/g" variable.tf
 
 cat variable.tf
 
 # Using Terraform to create ALB infrastructure
 
-terraform init && terraform apply --auto-approve
+terraform init && terraform "${option}" --auto-approve
 

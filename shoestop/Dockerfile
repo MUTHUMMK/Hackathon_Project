@@ -8,7 +8,7 @@ WORKDIR /muthu
 
 # copy the end with all .json files to inside the working directory
 
-COPY .*json .
+COPY *.json ./
 
 # npm install for application dependencies
 

@@ -2,7 +2,7 @@
 
 #Create instance infrastructure 
 
-terraform init && terraform apply --auto-approve
+terraform init && terraform "${option}" --auto-approve
 
 sleep 5
 

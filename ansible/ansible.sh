@@ -11,6 +11,6 @@ echo "$a"
 
 # inserting the dynamically created ip to the inventory.txt file 
 
-sed -i "s/dynamic_ip/$a/g" inventory.txt
+sed -i -e "s/dynamic/$a/g" inventory.txt
 
 cat inventory.txt
